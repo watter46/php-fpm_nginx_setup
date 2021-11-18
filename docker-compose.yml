@@ -1,0 +1,27 @@
+version: '3'
+
+volumes:
+  php_sockert:
+
+services:
+  web:
+    container_name: web
+    build: 
+      context: .
+      dockerfile: ./docker/nginx/Dockerfile
+    ports:
+      - 28000:8080
+    volumes:
+      - ./docker/html:/var/www/html
+      - php_sockert:/var/run/php-fpm
+
+  app:
+    container_name: app
+    build:
+      context: .
+      dockerfile: ./docker/php/Dockerfile
+    volumes:
+      - ./docker/html/index.php:/var/www/html/index.php
+      - php_sockert:/var/run/php-fpm
+    depends_on:
+      - web
